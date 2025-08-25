@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: >
+      jdbc:mysql://capston-1.cef8coqs6xh4.us-east-1.rds.amazonaws.com:3306/capston_1
+      ?useSSL=true
+      &verifyServerCertificate=false
+      &allowPublicKeyRetrieval=true
+      &serverTimezone=Asia/Seoul
+      &connectTimeout=5000
+      &socketTimeout=15000
+      &tcpKeepAlive=true
+    username: kumohcap
+    password: stonsepass  # 보안을 위해 환경변수 사용 권장
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+naver:
+  client-id: kYXXRpu46xAUm1Bx3xWr
+  client-secret: OEh9CbMl78
+  redirect-url-app: english_study://naver_login_page
+  redirect-url-web-default: http://localhost:3000/naver-login
+
+jwt:
+  secret: rnjsdbswjdshrkdudtlsgywnqkrrlgus9050
