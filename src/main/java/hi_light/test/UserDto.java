@@ -7,7 +7,7 @@ import lombok.*;
 @Getter @Setter @Builder
 @AllArgsConstructor @NoArgsConstructor
 public class UserDto {
-    private String id;
+    private String id; // NAVERgayeong1204 KAKAKOgayeong1204
     private String name;
     private String nickname;
 
