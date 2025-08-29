@@ -24,6 +24,7 @@ public class SecurityConfig {
                 // ★ 여기에서 개발용으로 열어둘 엔드포인트 지정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/user/**",
                                 "/ping",
                                 "/hi_light/user/getuser",
                                 "/hi_light/user/add",
