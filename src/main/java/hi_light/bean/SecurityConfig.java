@@ -1,4 +1,4 @@
-package hi_light.config;
+package hi_light.bean;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +24,7 @@ public class SecurityConfig {
                 // ★ 여기에서 개발용으로 열어둘 엔드포인트 지정
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
+                                "/api/v1/wordbook",
                                 "/user/**",
                                 "/ping",
                                 "/hi_light/user/getuser",
@@ -31,7 +32,8 @@ public class SecurityConfig {
                                 "/naver/**",
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
-                                "/swagger-ui/**"
+                                "/swagger-ui/**",
+                                "/api/personal-words/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
