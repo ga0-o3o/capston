@@ -29,4 +29,5 @@ naver:
   redirect-url-web-default: http://localhost:3000/naver-login
 
 jwt:
-  secret: rnjsdbswjdshrkdudtlsgywnqkrrlgus9050
+  secret: u2fK6z1B8vwrqa65cg9bleZgibVQTF36v6kNl+X/22Q=
+  token-validity-in-seconds: 3600  # 토큰 유효 시간(초 단위), 예시로 3600초(1시간) 설정

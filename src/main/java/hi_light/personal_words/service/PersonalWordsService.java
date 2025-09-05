@@ -3,7 +3,7 @@ package hi_light.personal_words.service;
 import hi_light.personal_words.dto.WordRequest;
 import hi_light.personal_words.entity.PersonalWords;
 import hi_light.personal_words.repository.PersonalWordsRepository;
-import hi_light.login.repository.UserRepository;
+import hi_light.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;

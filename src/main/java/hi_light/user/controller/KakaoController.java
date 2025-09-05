@@ -1,7 +1,8 @@
-package hi_light.login.controller;
+package hi_light.user.controller;
 
-import hi_light.login.entity.User;
-import hi_light.login.service.UserService;
+import hi_light.bean.JwtProvider;
+import hi_light.user.entity.User;
+import hi_light.user.service.KakaoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,8 +13,9 @@ import java.util.Map;
 @RequestMapping("/user")
 @RequiredArgsConstructor
 
-public class UserController {
-    private final UserService userService;
+public class KakaoController {
+    private final KakaoService userService;
+    private final JwtProvider jwtProvider; // JwtProvider 주입
 
     // 카카오 로그인 후 DB 저장
     @PostMapping("/save")
@@ -24,11 +26,15 @@ public class UserController {
         // DB 저장
         User user = userService.saveOrUpdateUser(id, name);
 
+        // JWT 토큰 생성
+        String token = jwtProvider.createToken(user.getId()); // 사용자 ID를 기반으로 토큰 생성
+
         // 저장된 사용자 정보 반환
         return ResponseEntity.ok(Map.of(
                 "id", user.getId(),
                 "name", user.getName(),
-                "nickname", user.getNickname()
+                "nickname", user.getNickname(),
+                "token", token // 생성된 토큰을 응답에 추가
         ));
     }
 }

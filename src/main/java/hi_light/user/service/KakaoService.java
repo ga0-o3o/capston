@@ -1,14 +1,14 @@
-package hi_light.login.service;
+package hi_light.user.service;
 
-import hi_light.login.entity.User;
-import hi_light.login.repository.UserRepository;
+import hi_light.user.entity.User;
+import hi_light.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 
-public class UserService {
+public class KakaoService {
     private final UserRepository userRepository;
 
     // DB 저장 (id가 없으면 새로 저장, 있으면 기존 사용자 반환)

@@ -6,41 +6,47 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtFilter jwtFilter;
+
+    public SecurityConfig(JwtFilter jwtFilter) {
+        this.jwtFilter = jwtFilter;
+    }
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(c -> {})       // CORS 활성화
+                .cors(c -> {})
                 .csrf(c -> c.disable())
-                // REST API 개발환경에서 보통 끔
-                .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
-                // ★ 여기에서 개발용으로 열어둘 엔드포인트 지정
+                //이제 로그인/회원가입 엔드포인트만 열어두고 나머지는 JWT로 보호
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                "/api/v1/wordbook",
-                                "/user/**",
-                                "/ping",
-                                "/hi_light/user/getuser",
-                                "/hi_light/user/add",
-                                "/naver/**",
+                                // 카카오 로그인/회원가입
+                                "/user/save",
+                                // 일반 회원가입
+                                "/api/user/signup",
+                                // 일반 로그인
+                                "/api/user/login",
+                                // Swagger 및 API 문서
                                 "/v3/api-docs/**",
                                 "/swagger-ui.html",
-                                "/swagger-ui/**",
-                                "/api/personal-words/**"
+                                "/swagger-ui/**"
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // 기본 제공 로그인/베이직인증 비활성화(원치 않는 401/Basic 프롬프트 방지)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable);
+                .httpBasic(c -> c.disable())
+                .formLogin(c -> c.disable())
+
+                // ★ JWT 필터를 Spring Security 필터 체인에 추가
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
