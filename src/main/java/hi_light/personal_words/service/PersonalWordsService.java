@@ -1,5 +1,7 @@
 package hi_light.personal_words.service;
 
+import hi_light.personal_words.dto.WordResponse;
+
 import hi_light.personal_words.dto.WordRequest;
 import hi_light.personal_words.entity.PersonalWords;
 import hi_light.personal_words.repository.PersonalWordsRepository;
@@ -9,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -131,10 +134,28 @@ public class PersonalWordsService {
     }
 
     //  특정 사용자가 자신의 단어장 목록을 볼 때 호출되는 함수. 목록 형태로 반환
-    public List<PersonalWords> getWordsByUserId(String userId) {
+    public List<WordResponse> getWordsByUserId(String userId) {
         userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with ID " + userId + " not found."));
 
-        return personalWordsRepository.findByUserId(userId);
+        List<PersonalWords> personalWordsList = personalWordsRepository.findByUserId(userId);
+        List<WordResponse> responseList = new ArrayList<>();
+
+        int displayId = 1;
+        for (PersonalWords word : personalWordsList) {
+            // Builder 패턴을 사용하여 객체 생성
+            responseList.add(WordResponse.builder()
+                    .id(word.getId())
+                    .displayId(displayId++) // 순차 번호 할당
+                    .userId(word.getUserId())
+                    .wordEn(word.getWordEn())
+                    .koreanMeaning(word.getKoreanMeaning())
+                    .registeredAt(word.getRegisteredAt())
+                    .nextReviewAt(word.getNextReviewAt())
+                    .build()
+            );
+        }
+
+        return responseList;
     }
 }

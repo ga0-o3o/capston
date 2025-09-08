@@ -19,7 +19,8 @@ public class PersonalWordsController {
     private final PersonalWordsService personalWordsService;
 
     // 새 단어 추가 API (파이썬 스크립트 또는 직접 입력)
-    @PostMapping
+
+    @PostMapping("/add")
     public ResponseEntity<WordResponse> addWord(@RequestBody WordRequest request) {
         PersonalWords newWord = personalWordsService.addWord(request);
         return ResponseEntity.ok(WordResponse.from(newWord)); // ok 부분이 HTTP 상태 코드 200을 의미하는 약속된 메서드.
@@ -49,10 +50,10 @@ public class PersonalWordsController {
     // 사용자 단어 목록 조회 API
     @GetMapping("/{userId}")
     public ResponseEntity<List<WordResponse>> getWordsByUserId(@PathVariable String userId) {
-        List<PersonalWords> words = personalWordsService.getWordsByUserId(userId);
-        List<WordResponse> response = words.stream()
-                .map(WordResponse::from)
-                .collect(Collectors.toList());
-        return ResponseEntity.ok(response);
+        // 반환 타입과 일치하도록 변수 타입을 변경합니다.
+        List<WordResponse> words = personalWordsService.getWordsByUserId(userId);
+
+        // 서비스에서 이미 DTO를 반환하므로, 변환 로직은 제거합니다.
+        return ResponseEntity.ok(words);
     }
 }

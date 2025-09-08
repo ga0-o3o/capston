@@ -4,6 +4,8 @@ import hi_light.user.entity.User;
 import hi_light.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder; // PasswordEncoder 임포트
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -12,6 +14,7 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder; // PasswordEncoder 주입
 
     // 회원가입
     public User signup(String id, String pw, String name) {
@@ -21,7 +24,7 @@ public class UserService {
 
         User user = User.builder()
                 .id(id)
-                .pw(pw)
+                .pw(passwordEncoder.encode(pw))
                 .name(name)
                 .nickname(name)
                 .userRank(null)
@@ -31,8 +34,18 @@ public class UserService {
     }
 
     // 로그인
+    @Transactional(readOnly = true)
     public Optional<User> login(String id, String pw) {
-        return userRepository.findByIdAndPw(id, pw);
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            // 입력받은 비밀번호(평문)와 DB에 저장된 암호화된 비밀번호를 비교
+            if (passwordEncoder.matches(pw, user.getPw())) {
+                return Optional.of(user);
+            }
+        }
+        return Optional.empty(); // 로그인 실패 시 Optional.empty() 반환
     }
 
     // 닉네임 변경

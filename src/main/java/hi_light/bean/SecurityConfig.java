@@ -8,6 +8,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import org.springframework.security.crypto.password.PasswordEncoder; // PasswordEncoder 임포트
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder; // BCryptPasswordEncoder 임포트
+
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -16,6 +20,12 @@ public class SecurityConfig {
 
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
+    }
+
+    // ★ 이 부분을 추가하세요
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
