@@ -1,5 +1,6 @@
 package hi_light.user.service;
 
+import hi_light.user.entity.UserRank;
 import hi_light.user.entity.User;
 import hi_light.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -57,11 +58,29 @@ public class UserService {
     }
 
     // 레벨테스트 후 userRank 업데이트
-    public User updateUserRank(String userId, String newRank) {
+    @Transactional
+    public User updateUserRank(String userId, String newRankString) {
+        // 1. 사용자 ID로 기존 사용자 정보 가져오기
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다."));
 
-        user.setUserRank(newRank); // userRank 업데이트
-        return userRepository.save(user);
+        // 2. 새로운 레벨(newRankString)과 기존 레벨(user.getUserRank())을 UserRank enum으로 변환
+        try {
+            UserRank currentRank = UserRank.valueOf(user.getUserRank());
+            UserRank newRank = UserRank.valueOf(newRankString);
+
+            // 3. 레벨 비교 로직 적용
+            // 새로운 레벨이 기존 레벨보다 높은 경우에만 업데이트
+            if (newRank.getRankValue() > currentRank.getRankValue()) {
+                user.setUserRank(newRankString); // 새로운 레벨로 업데이트
+                return userRepository.save(user); // DB에 저장
+            } else {
+                // 새로운 레벨이 기존 레벨보다 낮거나 같으면 업데이트하지 않고 기존 객체 반환
+                return user;
+            }
+        } catch (IllegalArgumentException e) {
+            // enum 변환에 실패하면 유효하지 않은 레벨 값으로 예외 처리
+            throw new IllegalArgumentException("유효하지 않은 레벨 값입니다.", e);
+        }
     }
 }
