@@ -31,6 +31,19 @@ public class JwtFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        // 💡 1. 토큰 검사를 건너뛸 경로 지정 (로그인, 회원가입 등)
+        String requestURI = request.getRequestURI();
+        if (requestURI.startsWith("/user/save") ||
+                requestURI.startsWith("/api/user/signup") ||
+                requestURI.startsWith("/api/user/login") ||
+                requestURI.startsWith("/v3/api-docs") ||
+                requestURI.startsWith("/swagger-ui")) {
+
+            filterChain.doFilter(request, response);
+            return; // 이 경로는 바로 다음 필터로 넘기고 종료
+        }
+
+        // 💡 2. 이 아래부터는 토큰이 필요한 요청만 처리
         String jwt = resolveToken(request);
 
         if (StringUtils.hasText(jwt) && jwtProvider.validateToken(jwt)) {

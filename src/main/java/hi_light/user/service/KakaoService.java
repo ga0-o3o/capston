@@ -18,6 +18,7 @@ public class KakaoService {
                     .id(id)
                     .name(name)
                     .nickname(name) // nickname 초기값 = name
+                    .userRank("A1")
                     .build());
         }
         return userRepository.findById(id).get();
