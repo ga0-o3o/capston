@@ -34,6 +34,7 @@ public class KakaoController {
                 "id", user.getId(),
                 "name", user.getName(),
                 "nickname", user.getNickname(),
+                "userRank", user.getUserRank(),
                 "token", token // 생성된 토큰을 응답에 추가
         ));
     }
