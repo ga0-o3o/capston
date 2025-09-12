@@ -7,6 +7,7 @@ import hi_light.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 
 import java.util.Optional;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class UserController {
 
     // 닉네임 변경
     @PutMapping("/nickname")
-    public User updateNickname(@RequestBody UserDto userDto) {
+    public User updateNickname(@Valid @RequestBody UserDto userDto) {
         return userService.updateNickname(userDto.getId(), userDto.getNickname());
     }
 
