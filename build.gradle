@@ -14,7 +14,9 @@ repositories {
 
 dependencies {
 
+    // 실시간 통신을 위한 WebSocket 기능
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    // 데이터 유효성 검증을 위한 기능
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
     // 웹, 데이터베이스, 보안
