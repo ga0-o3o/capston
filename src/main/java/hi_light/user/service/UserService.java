@@ -83,4 +83,5 @@ public class UserService {
             throw new IllegalArgumentException("유효하지 않은 레벨 값입니다.", e);
         }
     }
+
 }

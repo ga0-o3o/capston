@@ -8,6 +8,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,6 +57,15 @@ public class PersonalWordsController {
         List<WordResponse> words = personalWordsService.getWordsByUserId(userId);
 
         // 서비스에서 이미 DTO를 반환하므로, 변환 로직은 제거합니다.
+        return ResponseEntity.ok(words);
+    }
+
+    // 여러 사용자들의 단어장 전송 API
+    @PostMapping("/for-game")
+    public ResponseEntity<List<WordResponse>> getWordsForGame(@RequestBody List<String> userIds) {
+
+        List<WordResponse> words = personalWordsService.getWordsForGame(userIds);
+
         return ResponseEntity.ok(words);
     }
 }

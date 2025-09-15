@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class PersonalWordsService {
@@ -157,5 +159,19 @@ public class PersonalWordsService {
         }
 
         return responseList;
+    }
+
+    //  게임 참가자들의 단어 목록을 조회하는 메서드 추가
+    public List<WordResponse> getWordsForGame(List<String> userIds) {
+        if (userIds == null || userIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<PersonalWords> words = personalWordsRepository.findByUserIdIn(userIds);
+
+        // 조회된 엔티티(PersonalWords)를 프론트엔드가 사용할 DTO(WordResponse)로 변환
+        return words.stream()
+                .map(WordResponse::from)
+                .collect(Collectors.toList());
     }
 }
