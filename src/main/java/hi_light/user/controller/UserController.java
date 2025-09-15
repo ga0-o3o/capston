@@ -9,8 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 
+import hi_light.user.dto.UserResponseDto;
+import java.util.List;
+
 import java.util.Optional;
 import java.util.Map;
+
+import org.springframework.security.core.Authentication;
 
 @RestController
 @RequestMapping("/api/user")
@@ -74,5 +79,12 @@ public class UserController {
     @PostMapping("/update-rank")
     public User updateUserRank(@RequestBody UserDto userDto) {
         return userService.updateUserRank(userDto.getId(), userDto.getUserRank());
+    }
+
+    // 비밀번호를 제외한 전체 사용자 정보 조회
+    @GetMapping("/all")
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        List<UserResponseDto> users = userService.getAllUsersWithoutPw();
+        return ResponseEntity.ok(users);
     }
 }

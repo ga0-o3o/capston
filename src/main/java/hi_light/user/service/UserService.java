@@ -2,13 +2,16 @@ package hi_light.user.service;
 
 import hi_light.user.entity.UserRank;
 import hi_light.user.entity.User;
+import hi_light.user.dto.UserResponseDto;
 import hi_light.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder; // PasswordEncoder 임포트
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -84,4 +87,18 @@ public class UserService {
         }
     }
 
+    // 비밀번호를 제외한 전체 사용자 정보 조회 메서드
+    @Transactional(readOnly = true)
+    public List<UserResponseDto> getAllUsersWithoutPw() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserResponseDto::new) // User 엔티티를 UserResponseDto로 변환
+                .collect(Collectors.toList());
+    }
+
+    // ⭐ 사용자 ID로 랭크를 조회하는 메서드 추가
+    @Transactional(readOnly = true)
+    public Optional<String> getUserRankById(String id) {
+        return userRepository.findById(id).map(User::getUserRank);
+    }
 }
