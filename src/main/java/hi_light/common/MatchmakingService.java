@@ -135,4 +135,9 @@ public class MatchmakingService {
         return true;
     }
 
+    // 방 ID로 GameRoom 객체를 찾아주는 메서드
+    public GameRoom getRoomById(String roomId) {
+        return activeRooms.get(roomId);
+    }
+
 }

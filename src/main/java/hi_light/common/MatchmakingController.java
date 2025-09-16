@@ -1,5 +1,11 @@
 package hi_light.common;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Collections;
+
 import org.springframework.beans.factory.annotation.Autowired;
 // Spring이 객체(컴포넌트)를 자동으로 연결해주는 데 사용됩니다.
 // 여기서는 MatchmakingService를 컨트롤러에 주입하기 위해 사용됩니다.
@@ -81,5 +87,17 @@ public class MatchmakingController {
             return "게임이 시작되었습니다!";
         }
         return "게임 시작에 실패했습니다.";
+    }
+
+    //  클라이언트가 특정 방의 플레이어 목록을 요청할 수 있는 API
+    @GetMapping("/room/{roomId}/players")
+    public List<String> getRoomPlayers(@PathVariable String roomId) {
+        GameRoom room = matchmakingService.getRoomById(roomId);
+        if (room != null) {
+            return room.getPlayers().stream()
+                    .map(Player::getNickname)
+                    .collect(Collectors.toList());
+        }
+        return Collections.emptyList();
     }
 }
